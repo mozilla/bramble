@@ -7,18 +7,13 @@ from funfactory.settings_base import *
 # and js files that can be bundled together by the minify app.
 MINIFY_BUNDLES = {
     'css': {
-        'example_css': (
-            'css/examples/main.css',
-        ),
-        'example_mobile_css': (
-            'css/examples/mobile.css',
-        ),
+        'common_css': (),
     },
     'js': {
-        'example_js': (
-            'js/examples/libs/jquery-1.4.4.min.js',
-            'js/examples/libs/jquery.cookie.js',
-            'js/examples/init.js',
+        'common_js': (
+            'js/bramble/libs/jquery-1.4.4.min.js',
+            'js/bramble/libs/jquery.cookie.js',
+            'js/bramble/init.js',
         ),
     }
 }
@@ -29,8 +24,7 @@ ROOT_URLCONF = 'bramble.urls'
 INSTALLED_APPS = list(INSTALLED_APPS) + [
     # Application base, containing global templates.
     'bramble.base',
-    # Example code. Can (and should) be removed for actual projects.
-    'bramble.examples',
+    'django_extensions',
 ]
 
 
@@ -40,20 +34,24 @@ JINGO_EXCLUDE_APPS = [
     'admin',
 ]
 
-# Tells the extract script what files to look for L10n in and what function
-# handles the extraction. The Tower library expects this.
+MIDDLEWARE_EXCLUDE_CLASSES = [
+    'funfactory.middleware.LocaleURLMiddleware',
+]
 
-# # Use this if you have localizable HTML files:
-# DOMAIN_METHODS['lhtml'] = [
-#    ('**/templates/**.lhtml',
-#        'tower.management.commands.extract.extract_tower_template'),
-# ]
+MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
 
-# # Use this if you have localizable HTML files:
-# DOMAIN_METHODS['javascript'] = [
-#    # Make sure that this won't pull in strings from external libraries you
-#    # may use.
-#    ('media/js/**.js', 'javascript'),
-# ]
+for app in MIDDLEWARE_EXCLUDE_CLASSES:
+    if app in MIDDLEWARE_CLASSES:
+        MIDDLEWARE_CLASSES.remove(app)
 
-LOGGING = dict(loggers=dict(playdoh = {'level': logging.DEBUG}))
+MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES)
+
+## Log settings
+
+SYSLOG_TAG = "http_app_bramble"
+
+LOGGING = dict(loggers=dict(bramble = {'level': logging.DEBUG}))
+
+# Common Event Format logging parameters
+CEF_PRODUCT = 'Bramble'
+CEF_VENDOR = 'Mozilla'

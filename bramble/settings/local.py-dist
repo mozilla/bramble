@@ -1,9 +1,10 @@
 # This is an example settings/local.py file.
 # These settings overrides what's in settings/base.py
 
-# To extend any settings from settings/base.py here's an example:
+# uncomment for better admin apps
 #from . import base
-#INSTALLED_APPS = base.INSTALLED_APPS + ['debug_toolbar']
+#INSTALLED_APPS = (base.INSTALLED_APPS + ['debug_toolbar']
+#                    + ['django.contrib.admin'])
 
 DATABASES = {
     'default': {
@@ -53,21 +54,3 @@ DEV = True
 
 # Make this unique, and don't share it with anybody.  It cannot be blank.
 SECRET_KEY = ''
-
-# Uncomment these to activate and customize Celery:
-# CELERY_ALWAYS_EAGER = False  # required to activate celeryd
-# BROKER_HOST = 'localhost'
-# BROKER_PORT = 5672
-# BROKER_USER = 'playdoh'
-# BROKER_PASSWORD = 'playdoh'
-# BROKER_VHOST = 'playdoh'
-# CELERY_RESULT_BACKEND = 'amqp'
-
-## Log settings
-
-# SYSLOG_TAG = "http_app_playdoh"  # Make this unique to your project.
-# LOGGING = dict(loggers=dict(playdoh={'level': logging.DEBUG}))
-
-# Common Event Format logging parameters
-#CEF_PRODUCT = 'Playdoh'
-#CEF_VENDOR = 'Mozilla'
