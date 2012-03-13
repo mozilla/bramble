@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html LANG="{{ LANG }}" dir="{{ DIR }}">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <title>{% block page_title %}Rosaceae Rubus{% endblock %}</title>
+
+    {% block site_css %}
+      {{ css('common_css') }}
+    {% endblock %}
+  </head>
+  <body>
+    {% block content %}{% endblock %}
+
+    <div id="footer">
+    </div>
+
+    {% block site_js %}
+      {{ js('common_js') }}
+    {% endblock %}
+  </body>
+</html>
+
