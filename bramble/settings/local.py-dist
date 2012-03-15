@@ -22,13 +22,11 @@ DATABASES = {
         'TEST_CHARSET': 'utf8',
         'TEST_COLLATION': 'utf8_general_ci',
     },
-    # 'slave': {
-    #     ...
-    # },
 }
 
-# Uncomment this and set to all slave DBs in use on the site.
-# SLAVE_DATABASES = ['slave']
+REDIS_BACKENDS = {
+    #'default': 'redis://localhost:6383?socket_timeout=0.5&db=8',
+}
 
 # Recipients of traceback emails and other notifications.
 ADMINS = (
