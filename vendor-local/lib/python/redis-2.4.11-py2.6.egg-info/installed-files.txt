@@ -1,0 +1,13 @@
+../redis/__init__.py
+../redis/client.py
+../redis/connection.py
+../redis/exceptions.py
+../redis/__init__.pyc
+../redis/client.pyc
+../redis/connection.pyc
+../redis/exceptions.pyc
+./
+dependency_links.txt
+PKG-INFO
+SOURCES.txt
+top_level.txt
