@@ -2,8 +2,6 @@ from django.conf import settings as django_settings
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 
-from redis import redis_client
-
 from redis_utils import redis_client
 
 def index(request):

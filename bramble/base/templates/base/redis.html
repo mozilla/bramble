@@ -3,7 +3,7 @@
 {% block title %}Hey redis, what are the haps?{% endblock %}
 
 {% block content %}
-  {% for name, redis in redis_info.items %}
+  {% for name, redis in redis_info.items() %}
     <h2>Redis Instance: {{ name }}</h2>
     {% if redis.down %}
       <h3>Connection Error!</h3>
@@ -16,7 +16,7 @@
           {% for item in redis.config %}
             <tr>
               <th id="{{ name }}-{{ item.key }}">
-                {{ item.key }} <a href="#{{ name }}-{{ item.key }}">¶</a>
+                {{ item.key }} <a href="#{{ name }}-{{ item.key }}"></a>
               </th>
               <td>{{ item.value|pprint }}</td>
             </tr>
@@ -29,7 +29,7 @@
           {% for item in redis.info %}
             <tr>
               <th id="{{ name }}-{{ item.key }}">
-                {{ item.key }} <a href="#{{ name }}-{{ item.key }}">¶</a>
+                {{ item.key }} <a href="#{{ name }}-{{ item.key }}"></a>
               </th>
               <td>{{ item.value|pprint }}</td>
             </tr>

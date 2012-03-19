@@ -6,24 +6,6 @@
 #INSTALLED_APPS = (base.INSTALLED_APPS + ['debug_toolbar']
 #                    + ['django.contrib.admin'])
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'playdoh_app',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {
-            'init_command': 'SET storage_engine=InnoDB',
-            'charset' : 'utf8',
-            'use_unicode' : True,
-        },
-        'TEST_CHARSET': 'utf8',
-        'TEST_COLLATION': 'utf8_general_ci',
-    },
-}
-
 REDIS_BACKENDS = {
     #'default': 'redis://localhost:6383?socket_timeout=0.5&db=8',
 }

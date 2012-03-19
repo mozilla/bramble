@@ -46,6 +46,10 @@ for app in MIDDLEWARE_EXCLUDE_CLASSES:
 
 MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES)
 
+## No DB necessary
+
+DATABASES = {}
+
 ## Log settings
 
 SYSLOG_TAG = "http_app_bramble"
