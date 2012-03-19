@@ -2,17 +2,27 @@
 <html LANG="{{ LANG }}" dir="{{ DIR }}">
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-    <title>{% block page_title %}Rosaceae Rubus{% endblock %}</title>
-
+    <title>{% block page_title %}Hey build farm, what are the haps?{% endblock %}</title>
     {% block site_css %}
       {{ css('common_css') }}
     {% endblock %}
   </head>
   <body>
-    {% block content %}{% endblock %}
-
-    <div id="footer">
-    </div>
+    <header class="row">
+        {% block header %}
+        <h1 class="large">Releng Dashboard</h1>
+        {% endblock %}
+    </header>
+    <section class="row">
+        {% block content %}
+        
+        {% endblock %}
+    </section>
+    <footer class="row">
+      {% block footer %}
+          <em>Mozilla Releng Dashboard</em> - Powered by <a href="https://github.com/Lonnen/Bramble">Bramble</a>
+      {% endblock %}
+    </footer>
 
     {% block site_js %}
       {{ js('common_js') }}

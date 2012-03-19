@@ -7,13 +7,17 @@ from funfactory.settings_base import *
 # and js files that can be bundled together by the minify app.
 MINIFY_BUNDLES = {
     'css': {
-        'common_css': (),
+        'common_css': (
+            'css/common/main.css',
+            'css/bootstrap/bootstrap.css',
+            'css/bootstrap/bootstrap-responsive.css',
+        ),
     },
     'js': {
         'common_js': (
-            'js/bramble/libs/jquery-1.4.4.min.js',
-            'js/bramble/libs/jquery.cookie.js',
-            'js/bramble/init.js',
+            'js/common/libs/jquery-1.4.4.min.js',
+            'js/common/libs/jquery.cookie.js',
+            'js/common/init.js',
         ),
     }
 }
