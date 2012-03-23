@@ -46,7 +46,7 @@ def get_builds(request):
     for h in hashes:
         t,u = h.split(':')
         result.append({'type': t, 'uid': u})
-    return HttpResponse(json.serialize([result]),
+    return HttpResponse(json.serialize(result),
             content_type="application/json")
 
 
