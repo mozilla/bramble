@@ -78,8 +78,6 @@ returns all information about a job, pulled from the Pulse stream
 :master       - the master managing the jobs
 :build_number - the build number
 
-returns hash with all the job information in the pulse stream
-
 example:
     http://127.0.0.1:8000/jobs/e94042e9b58a40b7841dfd05fdde72da/buildbot-master18/1/ ->
     {"started": "2012-03-22T07:09:50+01:00",
