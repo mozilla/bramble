@@ -7,7 +7,7 @@ of the Mozilla build farm.
 API
 ---
 
-/builds
+    /builds
     returns all known build uids
 
     request params:
@@ -25,7 +25,7 @@ API
          {"type": "build", "uid": "78214761f24644199b7bcd02dc97f976"},
          {"type": "build", "uid": "363da5c3e3954e77a8d6fbd6b788e81c"}]
 
-/builds/:uid/jobs
+    /builds/:uid/jobs
     returns a list of jobs spawned by a specific build
 
     :uid - 32 alphanumeric digit build uid
@@ -39,7 +39,7 @@ API
          {"master": "buildbot-master16", "type": "job",
           "uid": "e94042e9b58a40b7841dfd05fdde72da", "build_number": "14"}]
 
-/build/:uid/changeset
+    /build/:uid/changeset
     returns the changeset information for a particular build uid
 
     :uid - 32 alphanumeric digit build uid
@@ -52,7 +52,7 @@ API
          "branch": "mozilla-esr10-macosx64-opt-unittest",
          "builduid": "e94042e9b58a40b7841dfd05fdde72da", "revision": "6c61683ed9cb"}
 
-/machines/events/:event_type/
+    /machines/events/:event_type/
     returns machine events with frequency counts
 
     :event_type - restrict results to events of this type
@@ -67,7 +67,7 @@ API
          {"count": "1", "machine_name": "slave.linux64-ix-slave23_1", "type": "machine",
           "event": "build:finished"}]
 
-/jobs/:uid/:master/:buildnumber/
+    /jobs/:uid/:master/:buildnumber/
     returns all information about a job, pulled from the Pulse stream
 
     :uid          - the build uid for the job
