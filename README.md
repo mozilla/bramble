@@ -6,7 +6,7 @@ of the Mozilla build farm.
 
 API
 ---
-
+```
     /builds
     returns all known build uids
 
@@ -24,8 +24,8 @@ API
          {"type": "build", "uid": "f07a73a9d5cd466c86b4e1078abcfb25"},
          {"type": "build", "uid": "78214761f24644199b7bcd02dc97f976"},
          {"type": "build", "uid": "363da5c3e3954e77a8d6fbd6b788e81c"}]
-
-
+```
+```
     /builds/:uid/jobs
     returns a list of jobs spawned by a specific build
 
@@ -39,8 +39,8 @@ API
           "uid": "e94042e9b58a40b7841dfd05fdde72da", "build_number": "19"},
          {"master": "buildbot-master16", "type": "job",
           "uid": "e94042e9b58a40b7841dfd05fdde72da", "build_number": "14"}]
-
-
+```
+```
     /build/:uid/changeset
     returns the changeset information for a particular build uid
 
@@ -53,8 +53,8 @@ API
          "project": "", "master": "buildbot-master10",
          "branch": "mozilla-esr10-macosx64-opt-unittest",
          "builduid": "e94042e9b58a40b7841dfd05fdde72da", "revision": "6c61683ed9cb"}
-
-
+```
+```
     /machines/events/:event_type/
     returns machine events with frequency counts
 
@@ -69,8 +69,8 @@ API
           "event": "build:finished"},
          {"count": "1", "machine_name": "slave.linux64-ix-slave23_1", "type": "machine",
           "event": "build:finished"}]
-
-
+```
+```
     /jobs/:uid/:master/:buildnumber/
     returns all information about a job, pulled from the Pulse stream
 
@@ -101,5 +101,5 @@ API
          "scheduler": "tests-mozilla-esr10-fedora64-debug-unittest",
          "builduid": "e94042e9b58a40b7841dfd05fdde72da",
          "revision": "6c61683ed9cb"}
-
+```
 [bp]: https://github.com/mozilla/briar-patch
