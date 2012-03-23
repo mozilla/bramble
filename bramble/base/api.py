@@ -93,7 +93,7 @@ def get_changeset_info(request, uid=None):
         r = redis_client('default')
         changeset_info = r.hgetall(redis_key)
     except RedisError as e:
-        log.error('redis error: %s')
+        log.error('redis error: %s', e)
         changeset_info = {}
     return HttpResponse(json.serialize(changeset_info),
             content_type="application/json")
@@ -117,7 +117,7 @@ def get_machine_events(request, event_type=None):
         r = redis_client('default')
         events = r.hgetall(redis_key)
     except RedisError as e:
-        log.error('redis error: %s')
+        log.error('redis error: %s', e)
         events = {}
     metrics = []
     for k, v in events.iteritems():
@@ -150,6 +150,6 @@ def get_job_info(request, uid=None, master=None, build_number=None):
         r = redis_client('default')
         job = r.hgetall(redis_key)
     except RedisError as e:
-        log.error('redis error: %s')
+        log.error('redis error: %s', e)
         job = {}
     return HttpResponse(json.serialize(job), content_type="application/json")
