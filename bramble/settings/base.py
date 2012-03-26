@@ -15,8 +15,8 @@ MINIFY_BUNDLES = {
     },
     'js': {
         'common_js': (
-            'js/common/libs/jquery-1.4.4.min.js',
-            'js/common/libs/jquery.cookie.js',
+            'js/common/libs/d3.js',
+            'js/common/barChart.js',
             'js/common/init.js',
         ),
     }
