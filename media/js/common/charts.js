@@ -14,7 +14,7 @@ var fakeData = (function(howMany) {
     return dates;
 }(21));
 
-//function() {
+(function(data) {
     var options = {
         xaxis: {
             mode: 'time',
@@ -49,7 +49,7 @@ var fakeData = (function(howMany) {
     // reshape the data
     // {date: currentDate, working: 32, idle: 5, error: 20}
     var working = [], idle =[], error = [];
-    fakeData.map(function(d) {
+    data.map(function(d) {
         working.push([d.date.getTime(), +d.working]);
         idle.push([d.date.getTime(), +d.idle]);
         error.push([d.date.getTime(), +d.error]);
@@ -61,4 +61,4 @@ var fakeData = (function(howMany) {
     ];
 
     $.plot($('#machinestatus'), reshapedData, options);
-//}
+}(fakeData));
