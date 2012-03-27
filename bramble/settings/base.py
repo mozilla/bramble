@@ -9,6 +9,7 @@ MINIFY_BUNDLES = {
     'css': {
         'common_css': (
             'css/common/main.css',
+            'css/common/buildGraph.css',
             'css/bootstrap/bootstrap.css',
             'css/bootstrap/bootstrap-responsive.css',
         ),

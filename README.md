@@ -62,7 +62,7 @@ returns machine events with frequency counts
               one of 'connect', 'disconnect', 'build'
 
 example
-    http://127.0.0.1:8000/machines/events/build/
+    http://127.0.0.1:8000/machines/events/build/ ->
     [{"count": "1", "machine_name": "slave.talos-r3-fed-024_5", "type": "machine",
       "event": "build:finished"},
      {"count": "1", "machine_name": "slave.talos-r3-fed-024_1", "type": "machine",
