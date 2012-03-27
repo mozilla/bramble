@@ -16,3 +16,7 @@ header {
 .large {
     font-size:3em;
 }
+
+#machinestatus {
+    height: 250px;
+}

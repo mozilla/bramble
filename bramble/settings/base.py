@@ -9,16 +9,18 @@ MINIFY_BUNDLES = {
     'css': {
         'common_css': (
             'css/common/main.css',
-            'css/common/buildGraph.css',
             'css/bootstrap/bootstrap.css',
             'css/bootstrap/bootstrap-responsive.css',
         ),
     },
     'js': {
         'common_js': (
-            'js/common/libs/d3.js',
-            'js/common/barChart.js',
-            'js/common/init.js',
+            'js/common/libs/jquery-1.4.4.min.js',
+            'js/common/libs/jquery.ba-resize.js',
+            'js/common/libs/jquery.flot.js',
+            'js/common/libs/jquery.flot.stack.js',
+            'js/common/libs/jquery.flot.resize.js',
+            'js/common/charts.js',
         ),
     }
 }
