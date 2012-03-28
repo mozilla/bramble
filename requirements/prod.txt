@@ -1,1 +1,3 @@
 -r ../vendor/src/funfactory/funfactory/requirements/prod.txt
+redis==2.4.11
+
