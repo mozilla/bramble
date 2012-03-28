@@ -15,7 +15,7 @@ MINIFY_BUNDLES = {
     },
     'js': {
         'common_js': (
-            'js/common/libs/jquery-1.4.4.min.js',
+            'js/common/libs/jquery-1.7.2.min.js',
             'js/common/libs/jquery.ba-resize.js',
             'js/common/libs/jquery.flot.js',
             'js/common/libs/jquery.flot.stack.js',
