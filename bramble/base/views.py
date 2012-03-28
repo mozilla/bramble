@@ -41,12 +41,18 @@ def machinecounts(request):
         _next = last - datetime.timedelta(seconds=resolution)
         range_ = _next, last
 
+        # more realistic (smoother) totals
+        total = randint(1600, 1630)
+        working = randint(1000, 1300)
+        error = randint(100, 200)
+        idle = total - working - error
+
         #XXXXXXXXXXXXXXXXXXXXXXXXX
         dates.append({
           'date': range_[0].isoformat(),
-          'working': randint(10, 20),
-          'idle': randint(2, 8),
-          'error': randint(0, 5),
+          'working': working,
+          'idle': idle,
+          'error': error,
         })
         last = _next
 

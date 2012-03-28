@@ -1,4 +1,4 @@
-$.getJSON('/machinecounts/',{bars: 21}, function(d) {
+ var populateMachineStatusGraph = function(d) {
     // graph options passed to flot
     var data = d['dates'],
     options = {
@@ -21,9 +21,9 @@ $.getJSON('/machinecounts/',{bars: 21}, function(d) {
             },
             shadowSize: 0,
         },
-        colors: ['#FF0000',  // error
-                 '#B4BCBD',  // idle
-                 '#1FE127'], // working
+        colors: ['#1FE127',  // working
+                 '#FF0000',  // error
+                 '#B4BCBD'], // idle
         grid: {
             clickable: true,
             hoverable: true,
@@ -45,11 +45,24 @@ $.getJSON('/machinecounts/',{bars: 21}, function(d) {
         error.push([(new Date(d.date)).getTime(), +d.error]);
     });
     var reshapedData = [
+        {label: 'working', data: working},
         {label: 'error', data: error},
         {label: 'idle', data: idle},
-        {label: 'working', data: working},
     ];
 
     // plot the chart and let plot be hoisted as a global
     plot = $.plot($('#machinestatus'), reshapedData, options);
-})
+},
+supplementalTable = function(d) {
+    var data = d['machines'],
+        populateTable = function(type, machines) {
+           console.log(type);
+           console.log(machines);
+        };
+
+    if (!d) return;
+    for (var key in data) { populateTable(key, data[key]); }
+};
+
+$.getJSON('/machinecounts/',{bars: 21}, populateMachineStatusGraph);
+$.getJSON('/machinecounts/specifics', {when: 1332956667685}, supplementalTable)
