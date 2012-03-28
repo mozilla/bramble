@@ -1,3 +1,4 @@
+import re
 import datetime
 import functools
 import anyjson as json
@@ -40,7 +41,7 @@ def machinecounts(request):
         _next = last - datetime.timedelta(seconds=resolution)
         range_ = _next, last
 
-        #....
+        #XXXXXXXXXXXXXXXXXXXXXXXXX
         dates.append({
           'date': range_[0].isoformat(),
           'working': randint(10, 20),
@@ -50,3 +51,35 @@ def machinecounts(request):
         last = _next
 
     return {'dates': dates}
+
+
+@json_view
+def machinecounts_specifics(request):
+    when = request.GET.get('when')  # a timestamp
+    when = parse_datetime(when)
+    resolution = int(request.GET.get('resolution', 60 * 60))
+
+    data = {
+      'working': ['slave1', 'slave2', 'slave4'],
+      'idle': ['slaveX', 'slaveY'],
+      'error': ['slave0'],
+    }
+    return {'machines': data}
+
+
+_timestamp_regex = re.compile('\d{13}|\d{10}\.\d{0,4}|\d{10}')
+def parse_datetime(datestr):
+    _parsed = _timestamp_regex.findall(datestr)
+    if _parsed:
+        datestr = _parsed[0]
+        if len(datestr) >= len('1285041600000'):
+            try:
+                return datetime.datetime.fromtimestamp(float(datestr)/1000)
+            except ValueError:
+                pass
+        if len(datestr) >= len('1283140800'):
+            try:
+                return datetime.datetime.fromtimestamp(float(datestr))
+            except ValueError:
+                pass # will raise
+    raise DatetimeParseError(datestr)
