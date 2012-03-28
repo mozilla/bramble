@@ -64,11 +64,12 @@ def machinecounts_specifics(request):
     when = request.GET.get('when')  # a timestamp
     when = parse_datetime(when)
     resolution = int(request.GET.get('resolution', 60 * 60))
-
+    from random import randint
     data = {
-      'working': ['slave1', 'slave2', 'slave4'],
-      'idle': ['slaveX', 'slaveY'],
-      'error': ['slave0'],
+      'working': ['slave' + str(x + randint(1,9)) for x in range(randint(4,7))],
+      'idle': ['slave' + str(x + randint(3,6)) for x in range(randint(2,7))],
+      'error': ['slave' + str(x + randint(4,13)) for x in range(randint(2,4))],
+
     }
     return {'machines': data}
 

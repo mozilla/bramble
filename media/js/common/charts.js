@@ -50,19 +50,46 @@
         {label: 'idle', data: idle},
     ];
 
-    // plot the chart and let plot be hoisted as a global
-    plot = $.plot($('#machinestatus'), reshapedData, options);
+    // make plot available for other callbacks
+    window['plot'] = $.plot($('#machinestatus'), reshapedData, options);
 },
+// accepts data from a json call to the machinecounts/specifics endpoint
+// and uses it to populate a data table beneath the machine status graph
 supplementalTable = function(d) {
     var data = d['machines'],
         populateTable = function(type, machines) {
-           console.log(type);
-           console.log(machines);
+            var list = tableContainer.append('<h3>' + type + '</h3>').append('<ul></ul>');
+            $.each(machines, function(i, machine) {
+                list.append('<li>' + machine + '</li>');
+            });
         };
 
-    if (!d) return;
+    var tableContainer = $('#supplemental-info');
+    tableContainer.empty() // clear out stale data
     for (var key in data) { populateTable(key, data[key]); }
+},
+// custom highlight event handler that highlights the whole column
+// instead of just one data category in the column
+highlightColumn = function(event, pos, item) {
+    plot.unhighlight();
+    if (!item) return;
+
+    index = item['dataIndex'];
+    plot.getData().map(function(d) { plot.highlight(d, index); });
+},
+// populates supplemental data section with detailed information for
+// the time of the column, if a column was indeed clicked
+drillDown = function(event, pos, item) {
+    if (!item) return;
+
+    $.getJSON('/machinecounts/specifics/',
+              {when: item['datapoint'][0]},
+              supplementalTable);
 };
 
 $.getJSON('/machinecounts/',{bars: 21}, populateMachineStatusGraph);
-$.getJSON('/machinecounts/specifics', {when: 1332956667685}, supplementalTable)
+
+// bind event listeners for plot events
+$('#machinestatus')
+    .bind('plotclick', drillDown)
+    .bind('plothover', highlightColumn);
