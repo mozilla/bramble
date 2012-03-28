@@ -16,8 +16,73 @@ var fakeData = (function(howMany) {
     return dates;
 }(21));
 
+// accepts events from the plothover and plotclick and if the mouse is over a
+// column, resets the highlight to the column and calls the method cascade to
+// populate supplemental information table
+//
+// requires plot and populateSupplemetalData functions in parent scope
+// intended to be registered as a callback in the event listener
+var highlightColumn = function(event, pos, item) {
+    if (!item) return;
+
+    plot.unhighlight();
+    index = item['dataIndex'];
+    plot.getData().map(function(d) { plot.highlight(d, index); });
+
+    populateSupplementalData(new Date(item['datapoint'][0]));
+},
+// given a date, this populates the suppelemental data table
+// beneath the machine status graph
+populateSupplementalData = function(date) {
+    // returns an xhr for builds on the provided date
+    var fetchBuilds = function(date) {
+        var pad = function(n) { return n < 10 ? '0' + n : n},
+        url = "/builds/?date="
+            + date.getUTCFullYear() + '-'
+            + pad((date.getUTCMonth() + 1)) + '-'
+            + pad(date.getUTCDate()) // + '&hour='
+            //+ pad(date.getUTCHours());
+        return $.getJSON(url);
+    },
+    // returns a deferred for jobs involved in the provided builds
+    fetchJobs = function(buildResponse) {
+        deferreds = buildResponse.map(function(build) {
+            uid = build['uid'];
+            if (uid === 'None') return;
+            newUrl = '/builds/' + uid + '/jobs';
+            return $.getJSON(newUrl);
+        });
+        return $.when.apply(null, deferreds);
+    },
+    // returns a deferred deferred for the job details of the provided job uids
+    fetchJobDetails = function(data) {
+        deferreds = data.map(function(datum) {
+            uid = datum['uid'];
+            master = datum['master'];
+            buildNumber = datum['build_number'];
+            newURL = '/jobs/' + uid + '/' + master + '/' + buildNumber;
+            return $.getJSON(newUrl);
+        });
+        return $.when.apply(null, deferreds);
+    },
+    displayJobs = function(data) {
+        console.log('displayJobs');
+        console.log(data);
+    };
+
+    // this won't do at all
+    // .then() is passing the right stuff, but I'm not sure that returning
+    // a deferred is doing what I think it is. Maybe we neext $.when() here?
+    // that would be ok.
+    //
+    // ALSO -- memoize all the things, don't respond to the same item if the
+    // mouse pos is a little different
+    fetchBuilds(date).then(fetchJobs).then(fetchJobDetails).then(displayJobs);
+};
+
 // Machine Status Graph
 (function(data) {
+    // graph options passed to flot
     var options = {
         xaxis: {
             mode: 'time',
@@ -31,7 +96,8 @@ var fakeData = (function(howMany) {
             stack: true,
             bars: {
                 show: true,
-                barWidth: 20 * 60 * 60 * 1000, // 20 hrs in ms, 4 hrs for padding
+                barWidth: 20 * 60 * 60 * 1000, // 20 hrs in ms
+                                               // remaining 4 are padding
                 lineWidth: 0,
                 fill: .7,
             },
@@ -44,13 +110,10 @@ var fakeData = (function(howMany) {
             clickable: true,
             hoverable: true,
             borderWidth: 0,
-            autoHighlight: false,
-        },
-        highlight: {
-            opacity: 1,
+            autoHighlight: false, // callback manuall highlights
         },
         legend: {
-            noColumns: 3,
+            noColumns: 3, // force a flat legend
         }
     };
 
@@ -63,96 +126,18 @@ var fakeData = (function(howMany) {
         idle.push([d.date.getTime(), +d.idle]);
         error.push([d.date.getTime(), +d.error]);
     });
-    reshapedData = [
+    var reshapedData = [
         {label: 'error', data: error},
         {label: 'idle', data: idle},
         {label: 'working', data: working},
     ];
 
+    // plot the chart and let plot be hoisted as a global
     plot = $.plot($('#machinestatus'), reshapedData, options);
 
-    // highlight on hover
-    // and populate the list below
-    (function(i) {
-        var dates = {},
-            callback = function(event, pos, item) {
-                if (!item) return;
+    // prime the callback with a mock object
+    highlightColumn(null, null, {dataIndex: 0, datapoint: [new Date()] });
 
-                plot.unhighlight();
-                index = item['dataIndex'];
-                plot.getData().map(function(d, i) {plot.highlight(d, index);});
-                (function(date) {
-                    var pad = function(n) { return n < 10 ? '0' + n : n},
-                        url = "/builds/?date="
-                            + date.getUTCFullYear() + '-'
-                            + pad((date.getUTCMonth() + 1)) + '-'
-                            + pad(date.getUTCDate()) + '&hour='
-                            + pad(date.getUTCHours()),
-                        supplement = function(data) {
-                            if (!data) return;
-                            $('#supplemental-info h3').text('UID\'s for ' + date.toDateString());
-                            $('#supplemental-info ul').empty();
-                            $.each(data.map(function(d) { return "<li>" + d['uid'] + "</li>";}),
-                                function(i, e) { $('#supplemental-info ul').append(e); }
-                            );
-                        }
-
-                    if (date in dates) {
-                        supplement(dates[date]);
-                        return;
-                    }
-
-                    $.getJSON(url, function(d) {
-                        dates[date] = d;
-                        supplement(d);
-                    });
-                }(new Date(item['datapoint'][0])));
-            };
-        if (i) {
-            callback(null, null, i); // prime the drilldown function
-        }
-        $("#machinestatus").bind("plothover", callback); //listen for events
-    }({dataIndex: 0, datapoint: [new Date()] })); //pass in a mock graph event item
+    // register the callback as a listener for mouse interactions
+    $("#machinestatus").bind("plothover", highlightColumn);
 }(fakeData));
-
-/*
-// returns an xhr for builds on the provided date
-var fetchBuilds = function(date) {
-    var pad = function(n) { return n < 10 ? '0' + n : n},
-    url = "/builds/?date="
-        + date.getUTCFullYear() + '-'
-        + pad((date.getUTCMonth() + 1)) + '-'
-        + pad(date.getUTCDate()) // + '&hour='
-        //+ pad(date.getUTCHours());
-    return $.getJSON(url);
-},
-// returns a deferred for jobs involved in the provided builds
-fetchJobs = function(buildResponse) {
-    console.log('fetchJobs');
-    console.log(buildResponse);
-    deferreds = buildResponse.map(function(build) {
-        uid = build['uid'];
-        if (uid === 'None') return;
-        newUrl = '/builds/' + uid + '/jobs';
-        return $.getJSON(newUrl);
-    });
-    return $.when.apply(null, deferreds);
-},
-// returns a deferred deferred for the job details of the provided job uids
-fetchJobDetails = function(data) {
-    console.log('fetch job details');
-    console.log(data);
-    deferreds = data.map(function(datum) {
-        uid = datum['uid'];
-        master = datum['master'];
-        buildNumber = datum['build_number'];
-        newURL = '/jobs/' + uid + '/' + master + '/' + buildNumber;
-        return $.getJSON(newUrl);
-    });
-    return $.when.apply(null, deferreds);
-},
-displayJobs = function(data) {
-    console.log('displayJobs');
-    console.log(data);
-};
-fetchBuilds().then(fetchJobs).then(fetchJobDetails).then(displayJobs); */
