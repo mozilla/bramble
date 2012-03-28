@@ -3,7 +3,7 @@
 
 # uncomment for better admin apps
 #from . import base
-#INSTALLED_APPS = (base.INSTALLED_APPS + ['debug_toolbar']
+#INSTALLED_APPS = (base.INSTALLED_APPS + ['debug_toolbar', 'django_extensions']
 #                    + ['django.contrib.admin'])
 
 REDIS_BACKENDS = {
@@ -34,3 +34,11 @@ DEV = True
 
 # Make this unique, and don't share it with anybody.  It cannot be blank.
 SECRET_KEY = ''
+
+# If you want short-term memory caching
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#        'LOCATION': 'unique-snowflake'
+#    }
+#}

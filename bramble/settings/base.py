@@ -31,7 +31,7 @@ ROOT_URLCONF = 'bramble.urls'
 INSTALLED_APPS = list(INSTALLED_APPS) + [
     # Application base, containing global templates.
     'bramble.base',
-    'django_extensions',
+
 ]
 
 
@@ -66,3 +66,18 @@ LOGGING = dict(loggers=dict(bramble = {'level': logging.DEBUG}))
 # Common Event Format logging parameters
 CEF_PRODUCT = 'Bramble'
 CEF_VENDOR = 'Mozilla'
+
+
+## Caching
+
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'DB': 3,
+            #'PASSWORD': 'yadayada',
+            #'PARSER_CLASS': 'redis.connection.HiredisParser'
+        },
+    },
+}
