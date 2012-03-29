@@ -59,10 +59,14 @@ def build_machinecounts(date,
         for job_key in redis_source.smembers(_jobs_key):
             job = redis_source.hgetall(job_key)
             slave = job['slave']
+            try:
+                result = int(job['results'])
+            except ValueError:
+                logger.warn('malformed result value for job: %s', job_key)
+                continue
+
             if slave not in slave_names:
                 _unknown_slaves.add(slave)
-            result = int(job['results'])
-
             if result:
                 failures.add(slave)
             else:
