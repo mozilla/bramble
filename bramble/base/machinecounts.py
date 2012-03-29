@@ -62,7 +62,7 @@ def build_machinecounts(date,
             try:
                 result = int(job['results'])
             except ValueError:
-                logger.warn('malformed result value for job: %s', job_key)
+                logging.warn('malformed result value for job: %s', job_key)
                 continue
 
             if slave not in slave_names:
