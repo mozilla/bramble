@@ -61,7 +61,7 @@ DATABASES = {}
 
 SYSLOG_TAG = "http_app_bramble"
 
-LOGGING = dict(loggers=dict(bramble = {'level': logging.DEBUG}))
+LOGGING = dict(loggers=dict(bramble={'level': logging.DEBUG}))
 
 # Common Event Format logging parameters
 CEF_PRODUCT = 'Bramble'
@@ -81,3 +81,7 @@ CACHES = {
         },
     },
 }
+
+
+## Slaves API
+SLAVES_API_URL = 'http://slavealloc.build.mozilla.org/api/slaves'

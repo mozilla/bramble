@@ -1,93 +1,56 @@
 import re
-import logging
 import datetime
-import anyjson as json
 from optparse import make_option
-from django.core.cache import cache
 from django.core.management.base import BaseCommand
 
 from bramble.base.redis_utils import redis_client
-
-SLAVES_API_URL = 'http://slavealloc.build.mozilla.org/api/slaves'
-
-
-def get_all_slave_names():
-    key = 'all-slave-names'
-    value = cache.get(key)
-    if value is None:
-        from urllib import urlopen
-        content = urlopen(SLAVES_API_URL).read()
-        parsed = json.loads(content)
-        value = [x['name'] for x in parsed]
-        cache.set(key, value, 60 * 60)
-    return value
-
-
-def cache_redis_op(r, command, arg, exp=60):
-    key = 'r:%s:%s' % (command, arg)
-    value = cache.get(key)
-    if value is None:
-        value = getattr(r, command)(arg)
-        if value is not None:
-            cache.set(key, value, exp)
-    return value
+from bramble.base.machinecounts import (
+  build_machinecounts, make_key, get_all_slave_names)
 
 
 def process_date(date, slave_names, redis_source, redis_store,
-                  dry_run=False, quiet=False):
+                 dry_run=False,
+                 quiet=False,
+                 force_refresh=False):
     if not quiet:
         print (' %s ' % date).center(79, '=')
 
-    successes = set()
-    failures = set()
-    _success_and_failure = set()
-    _unknown_slaves = set()
+    successes_key = make_key('successes', date)
+    failures_key = make_key('failures', date)
+    idles_key = make_key('idles', date)
+    if (redis_store.exists(successes_key) and
+        redis_store.exists(failures_key) and
+        redis_store.exists(idles_key)):
+        # already processed this date
+        if force_refresh:
+            redis_store.delete(successes_key)
+            redis_store.delete(failures_key)
+            redis_store.delete(idles_key)
+        else:
+            if not quiet:
+                print "Already processed this date"
+            return
 
-    _builds_key = 'build:%s' % date
-    if not quiet:
-        print "Going through", redis_source.scard(_builds_key), "builds"
-    for each in cache_redis_op(redis_source, 'smembers', _builds_key):
-        if 'None' in each:
-            continue
-        type_, builduid = each.split(':')
-        _jobs_key = 'build:%s' % builduid
-        for job_key in cache_redis_op(redis_source, 'smembers', _jobs_key):
-            job = cache_redis_op(redis_source, 'hgetall', job_key)
-            slave = job['slave']
-            if slave not in slave_names:
-                _unknown_slaves.add(slave)
-            result = int(job['results'])
-
-            if result:
-                failures.add(slave)
-            else:
-                successes.add(slave)
-
-    _success_and_failure = successes & failures
-    successes -= failures
-
-    # the rest are considered idles in that hour
-    idles = set(slave_names) - successes - failures
-
-    # save it all
-    if not dry_run:
-        successes_key = 'successes:%s' % date
-        [redis_store.sadd(successes_key, each) for each in successes]
-        failures_key = 'failures:%s' % date
-        [redis_store.sadd(failures_key, each) for each in failures]
-        idles_key = 'idles:%s' % date
-        [redis_store.sadd(idles_key, each) for each in idles]
+    data = build_machinecounts(
+        date,
+        redis_source=redis_source,
+        redis_store=redis_store,
+        slave_names=slave_names,
+        dry_run=dry_run,
+    )
 
     if not quiet:
-        print "SUCCESSES".ljust(25), len(successes)
-        print "FAILURES".ljust(25), len(failures)
-        print "IDLES".ljust(25), len(idles)
-        print "_SUCCESS_AND_FAILURE".ljust(25), len(_success_and_failure)
-        print "_UNKNOWN_SLAVES".ljust(25), len(_unknown_slaves)
-        print "_CHECK", len(slave_names), (len(successes)
-                                            + len(failures)
-                                            + len(idles)
-                                            - len(_unknown_slaves))
+        if data:
+            print "SUCCESSES".ljust(25), len(data['successes'])
+            print "FAILURES".ljust(25), len(data['failures'])
+            print "IDLES".ljust(25), len(data['idles'])
+            print "_UNKNOWN_SLAVES".ljust(25), len(data['_unknown_slaves'])
+            print "_CHECK", len(slave_names), (len(data['successes'])
+                                                + len(data['failures'])
+                                                + len(data['idles'])
+                                                - len(data['_unknown_slaves']))
+        else:
+            print "NO BUILD DATA AVAILABLE :("
 
 
 class Command(BaseCommand):
@@ -114,6 +77,11 @@ class Command(BaseCommand):
             dest='dryrun',
             default=False,
             help="don't save anything"),
+        make_option('--force-refresh',
+            action='store_true',
+            dest='force_refresh',
+            default=False,
+            help="process it again even if we have the data"),
         )
 
     def handle(self, *dates, **options):
@@ -130,8 +98,8 @@ class Command(BaseCommand):
         assert slave_names
         assert len(slave_names) == len(set(slave_names))
         for date in dates:
-            logging.debug("Processing machine counts for %s" % date)
             process_date(date, slave_names, redis, redis_store,
                          dry_run=options['dryrun'],
                          quiet=not int(options['verbosity']),
+                         force_refresh=options['force_refresh']
                          )
