@@ -1,3 +1,4 @@
+import logging
 import urllib
 import anyjson as json
 from django.core.cache import cache
@@ -48,11 +49,11 @@ def build_machinecounts(date,
     _unknown_slaves = set()
 
     _builds_key = 'build:%s' % date
-    _count_builds = 0
+    if not redis_source.exists(_builds_key):
+        logging.warning("No build data for %s", date)
     for each in redis_source.smembers(_builds_key):
         if 'None' in each:
             continue
-        _count_builds += 1
         type_, builduid = each.split(':')
         _jobs_key = 'build:%s' % builduid
         for job_key in redis_source.smembers(_jobs_key):
@@ -66,8 +67,6 @@ def build_machinecounts(date,
                 failures.add(slave)
             else:
                 successes.add(slave)
-    if not _count_builds:
-        return {}
 
     successes -= failures
 

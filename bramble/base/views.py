@@ -61,7 +61,6 @@ def machinecounts(request):
 
 
 def _get_machinecounts(from_date, to_date, redis_store):
-
     date = from_date
     all_successes = set()
     all_failures = set()
@@ -79,9 +78,6 @@ def _get_machinecounts(from_date, to_date, redis_store):
                          format_date(date))
             data = build_machinecounts(format_date(date),
                                        redis_store=redis_store)
-            if not data:
-                raise BuildDataError(
-                  date.strftime("No build information on %Y-%m-%d.%H"))
             successes = data['successes']
             failures = data['failures']
             idles = data['idles']
@@ -113,9 +109,9 @@ def machinecounts_specifics(request):
     when = request.GET.get('when')  # a timestamp
     when = parse_datetime(when)
     resolution = int(request.GET.get('resolution', DEFAULT_RESOLUTION))
-    till = when + datetime.timedelta(seconds=resolution)
+    from_ = when - datetime.timedelta(seconds=resolution)
     redis_store = redis_client('store')
-    data = _get_machinecounts(when, till, redis_store)
+    data = _get_machinecounts(from_, when, redis_store)
     data = {
       'working': list(data['successes']),
       'idle': list(data['idles']),

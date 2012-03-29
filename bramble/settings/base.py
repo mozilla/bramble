@@ -53,9 +53,14 @@ for app in MIDDLEWARE_EXCLUDE_CLASSES:
 
 MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES)
 
-## No DB necessary
+## No DB necessary (except when you run tests annoyingly)
 
-DATABASES = {}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
+    },
+}
 
 ## Log settings
 
