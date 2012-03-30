@@ -9,7 +9,7 @@ from redis_utils import redis_client
 from bramble.base.machinecounts import (
   build_machinecounts, make_key, format_date)
 
-DEFAULT_RESOLUTION = 60 * 60 * 6  # 6 hours
+DEFAULT_RESOLUTION = 60 * 60  # 1 hours
 
 
 class BuildDataError(Exception):
