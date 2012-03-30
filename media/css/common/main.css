@@ -18,5 +18,22 @@ header {
 }
 
 #machinestatus {
-    height: 250px;
+   height: 250px;
+   margin-bottom: 2em;
+}
+
+#DataTables_Table_0_previous {
+    margin-left: 10px;
+}
+
+#DataTables_Table_0_next {
+    margin-left: 10px;
+}
+
+.paginate_disabled_previous {
+    color: gray !important;
+}
+
+.paginate_disabled_next {
+    color: gray !important;
 }

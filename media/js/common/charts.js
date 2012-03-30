@@ -57,16 +57,27 @@
 // and uses it to populate a data table beneath the machine status graph
 supplementalTable = function(d) {
     var data = d['machines'],
-        populateTable = function(type, machines) {
-            var list = tableContainer.append('<h3>' + type + '</h3>').append('<ul></ul>');
-            $.each(machines, function(i, machine) {
-                list.append('<li>' + machine + '</li>');
-            });
-        };
+        aaData = [],
+        i, j, key, machines;
 
-    var tableContainer = $('#supplemental-info');
-    tableContainer.empty() // clear out stale data
-    for (var key in data) { populateTable(key, data[key]); }
+    console.log(data);
+    for (key in data) {
+        machines = data[key];
+        for (i = 0, j = machines.length; i < j; i++) {
+            aaData.push([machines[i], key]);
+        }
+    }
+
+    $('#supplemental-info').empty()
+        .append('<table class="table table-striped"></table>');
+    $('#supplemental-info table').dataTable({
+        'aaData': aaData,
+        'aoColumns': [{'sTitle': 'Name'}, {'sTitle': 'Status'}],
+    });
+    // style the new elements
+    $('#DataTables_Table_0_length').addClass('span4');
+    $('#DataTables_Table_0_filter').addClass('span4');
+    $('#DataTables_Table_0').addClass('span12');
 },
 // custom highlight event handler that highlights the whole column
 // instead of just one data category in the column
