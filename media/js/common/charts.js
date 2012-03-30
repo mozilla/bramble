@@ -60,7 +60,6 @@ supplementalTable = function(d) {
         aaData = [],
         i, j, key, machines;
 
-    console.log(data);
     for (key in data) {
         machines = data[key];
         for (i = 0, j = machines.length; i < j; i++) {
