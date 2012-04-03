@@ -93,6 +93,7 @@ class MachinecountsTestCase(TestCase):
         self.assertEqual(data['error'], ['slave3'])
         self.assertEqual(sorted(data['idle']),
                          ['slave2', 'slave4', 'slave5'])
+        self.assertEqual(timestamp, structure['time'])
 
     def test_machinecounts_6_hour_resolution(self):
         date = datetime.datetime(2012, 1, 1, 6, 0)

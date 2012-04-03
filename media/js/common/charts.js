@@ -57,6 +57,7 @@
 // and uses it to populate a data table beneath the machine status graph
 supplementalTable = function(d) {
     var data = d['machines'],
+        date = new Date(d['time']).toTimeString(),
         aaData = [],
         i, j, key, machines;
 
@@ -72,11 +73,13 @@ supplementalTable = function(d) {
     $('#supplemental-info table').dataTable({
         'aaData': aaData,
         'aoColumns': [{'sTitle': 'Name'}, {'sTitle': 'Status'}],
+        'sPaginationType': 'full_numbers',
     });
     // style the new elements
-    $('#DataTables_Table_0_length').addClass('span4');
-    $('#DataTables_Table_0_filter').addClass('span4');
-    $('#DataTables_Table_0').addClass('span12');
+    $('.dataTables_length').addClass('span4');
+    $('.dataTables_filter').addClass('span4');
+    $('.dataTable').addClass('span12');
+    $('.dataTables_length select').addClass('span1');
 },
 // custom highlight event handler that highlights the whole column
 // instead of just one data category in the column

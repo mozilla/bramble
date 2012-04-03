@@ -1,5 +1,6 @@
 import re
 import logging
+import time
 import datetime
 import functools
 import anyjson as json
@@ -117,7 +118,8 @@ def machinecounts_specifics(request):
       'idle': list(data['idles']),
       'error': list(data['failures']),
     }
-    return {'machines': data}
+    return {'machines': data,
+            'time': int(time.mktime(when.timetuple()))}
 
 
 _timestamp_regex = re.compile('\d{13}|\d{10}\.\d{0,4}|\d{10}')

@@ -22,12 +22,13 @@ header {
    margin-bottom: 2em;
 }
 
-#DataTables_Table_0_previous {
-    margin-left: 10px;
+.paginate_active {
+    padding: .6em;
+    font-weight: bold;
 }
 
-#DataTables_Table_0_next {
-    margin-left: 10px;
+.paginate_button {
+    padding: .6em;
 }
 
 .paginate_disabled_previous {
@@ -36,4 +37,8 @@ header {
 
 .paginate_disabled_next {
     color: gray !important;
+}
+
+.dataTables_length select {
+    display: inline !important;
 }
