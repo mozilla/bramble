@@ -44,7 +44,7 @@ def machinecounts(request):
         last = parse_datetime(request.GET['last'])
     else:
         last = datetime.datetime.utcnow()
-    redis_store = redis_client('store')
+    redis_store = redis_client('bramble')
 
     dates = []
     for i in range(no_bars):

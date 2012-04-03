@@ -34,9 +34,9 @@ def build_machinecounts(date,
                         dry_run=False,      # don't actually write
                         ):
     if not redis_source:
-        redis_source = redis_client('default')
+        redis_source = redis_client('briar-patch')
     if not redis_store:
-        redis_store = redis_client('store')
+        redis_store = redis_client('bramble')
     if not slave_names:
         slave_names = get_all_slave_names()
 

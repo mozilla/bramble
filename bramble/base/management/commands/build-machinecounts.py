@@ -85,8 +85,8 @@ class Command(BaseCommand):
         )
 
     def handle(self, *dates, **options):
-        redis = redis_client('default')
-        redis_store = redis_client('store')
+        redis = redis_client('briar-patch')
+        redis_store = redis_client('bramble')
 
         if not dates:
             dates = [(datetime.datetime.utcnow()

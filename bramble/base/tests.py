@@ -18,13 +18,13 @@ class MachinecountsTestCase(TestCase):
         settings.SLAVES_API_URL = 'file://' + fixture_file_location
 
         settings.REDIS_BACKENDS = {
-          'default': 'redis://localhost:6379?socket_timeout=0.5&db=6',
-          'store': 'redis://localhost:6379?socket_timeout=0.5&db=7',
+          'briar-patch': 'redis://localhost:6379?socket_timeout=0.5&db=6',
+          'bramble': 'redis://localhost:6379?socket_timeout=0.5&db=7',
         }
 
-        self.redis_store = redis_client('store')
+        self.redis_store = redis_client('bramble')
         self.redis_store.flushdb()
-        self.redis_source = redis_client('default')
+        self.redis_source = redis_client('briar-patch')
         self.redis_source.flushdb()
 
         from django.core.cache import cache
