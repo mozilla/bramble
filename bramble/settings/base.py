@@ -21,7 +21,8 @@ MINIFY_BUNDLES = {
             'js/common/libs/jquery.flot.stack.js',
             'js/common/libs/jquery.flot.resize.js',
             'js/common/libs/jquery.dataTables.min.js',
-            'js/common/charts.js',
+            #'js/common/charts.js',
+            'js/common/dates.js',
         ),
     }
 }
@@ -32,7 +33,7 @@ ROOT_URLCONF = 'bramble.urls'
 INSTALLED_APPS = list(INSTALLED_APPS) + [
     # Application base, containing global templates.
     'bramble.base',
-
+    'cronjobs',
 ]
 
 

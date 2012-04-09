@@ -13,8 +13,16 @@ header {
     font-variant:small-caps;
 }
 
+header .error {
+    border-color: rgb(185, 74, 72) !important;
+}
+
 .large {
     font-size:3em;
+}
+
+.inline {
+    display: inline !important;
 }
 
 #machinestatus {

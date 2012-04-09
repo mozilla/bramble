@@ -12,7 +12,11 @@
     <header class="row">
         {% block header %}
         <div class="span12">
-          <h1 class="large">Build Farm Machine Status</h1>
+          <h1 class="large span6">Build Farm Machine Status</h1>
+          <form id="dateform" class="form-inline">
+              <input type="text" id="from" class="input-small" placeholder="2012-04-08.12">&nbsp;&hellip;&nbsp;
+              <input type="text" id="to" class="input-small" placeholder="2012-04-09.12">
+          </form>
         </div>
         {% endblock %}
     </header>
