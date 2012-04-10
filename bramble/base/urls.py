@@ -5,10 +5,6 @@ import views
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='bramble.base.index'),
-    url(r'^machinecounts/$', views.machinecounts,
-        name='bramble.base.machinecounts'),
-    url(r'^machinecounts/specifics/$', views.machinecounts_specifics,
-         name='bramble.base.machinecounts_specifics'),
     url(r'^machines/$', views.machine_details,
         name='bramble.base.machine_details'),
     url(r'^builds/$', api.get_builds, name='bramble.base.get_builds'),
