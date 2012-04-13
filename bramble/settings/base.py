@@ -21,8 +21,9 @@ MINIFY_BUNDLES = {
             'js/common/libs/jquery.flot.stack.js',
             'js/common/libs/jquery.flot.resize.js',
             'js/common/libs/jquery.dataTables.min.js',
+            'js/common/dataTable.ext.js',
             'js/common/libs/dataTables.bootstrap.js',
-            #'js/common/charts.js',
+            'js/common/libs/underscore.min.js',
             'js/common/dates.js',
         ),
     }

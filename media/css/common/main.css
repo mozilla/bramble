@@ -27,7 +27,18 @@ footer {
 }
 
 .inline {
-    display: inline !important;
+    display:inline !important;
+}
+
+#spinner {
+    position:absolute;
+    top:10px;
+    right:15px;
+    background:rgba(255,255,255,0.65);
+    padding: 10px;
+    z-index:20;
+    display:none;
+    border-radius:12px;
 }
 
 #machinestatus {
@@ -100,4 +111,8 @@ table.table thead .sorting_asc_disabled {
 }
 table.table thead .sorting_desc_disabled {
     background: url('../../img/sort_desc_disabled.png') no-repeat center right;
+}
+
+.column_filter {
+    width:100% !important;
 }
