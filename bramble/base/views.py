@@ -7,7 +7,8 @@ import anyjson as json
 from django import http
 from django.shortcuts import render
 from redis_utils import redis_client
-from bramble.base.machinecounts import fetch_machine_info, format_date
+from bramble.base.machinecounts import (fetch_machine_info, format_date,
+        parse_dtime)
 
 
 def json_view(f):
@@ -42,16 +43,3 @@ def machine_details(request):
         data.extend(fetch_machine_info(current, redis_store))
         current -= datetime.timedelta(hours=1)
     return {'machines': data}
-
-
-def parse_dtime(datestr):
-    '''
-    Parses a string of the format YYYY-MM-DD.HH and returns a datetime object
-    '''
-    _regex = re.compile('^\d{4}-\d{2}-\d{2}\.\d{2}$')
-    _parsed = _regex.findall(datestr)
-    if not _parsed:
-        raise ValueError(datestr)
-    datestring, hour = _parsed[0].split('.')
-    year, month, day = datestring.split('-')
-    return datetime.datetime(int(year), int(month), int(day), int(hour))

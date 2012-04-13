@@ -4,7 +4,6 @@ var fetchGlobalData = function() {
         inputTo = $('#to');
 
     if (!validateInput(inputFrom, inputTo)) {
-        console.log('fail');
         return;
     }
 
@@ -31,15 +30,40 @@ validateInput = function() {
     return valid;
 },
 populateTable = function(data) {
-    console.log(data);
+    table.fnClearTable();
+    table.fnAddData(data['machines']);
+    table.fnAdjustColumnSizing();
+},
+fnFilterColumn = function(i) {
+    table.fnFilter($('#col' + (i + 1) + '_filter').val(), i, true, true);
 }
+
+// extend dataTables to use bootstrap classes
+$.extend( $.fn.dataTableExt.oStdClasses, {
+    "sWrapper": "dataTables_wrapper form-inline"
+} );
+
+// set up the data table
+window['table'] = $('#dataTable').dataTable({
+    'sDom': 'rt<"row"<"span6"l><"span6"pi>>',
+    'sPaginationType': 'bootstrap',
+    'aoColumns': [
+        { 'sTitle': 'Time', "mDataProp":  'datetime'},
+        { 'sTitle': 'Name', "mDataProp":  'name'},
+        { 'sTitle': 'Scheduler', "mDataProp":  'scheduler'},
+        { 'sTitle': 'Master', "mDataProp":  'master'},
+        { 'sTitle': 'Platform', "mDataProp":  'platform'},
+        { 'sTitle': 'Successes', "mDataProp":  'successes'},
+        { 'sTitle': 'Failures', "mDataProp":  'failures'},
+    ],
+})
 
 // register input listener
 $('header input').on('input', fetchGlobalData);
 // prevent form submission
 $('#dateform').submit(function() { return false; });
-// prefill with valid date
-(function(d){
+// prefill date range selector with today's date
+(function(d) {
     var pad = function(n) {
         return n < 10 ? '0' + n : n;
     },
@@ -54,3 +78,20 @@ $('#dateform').submit(function() { return false; });
     $('#from').val(formatDate(d));
 }(new Date()));
 $('#to').trigger('input');
+
+// column regex's
+$('thead').append('<tr id="inputs"></tr>');
+$('th').each(function(index, Element) {
+    $('#inputs').append(function() {
+        return  '<th rowspan="1" colspan="1">'
+                + '<input class="column_filter" type="text" name="col'
+                + index + '" id="col' + (index + 1) + '_filter"'
+                + 'placeholder="optional regex">'
+                + '</th>';
+    });
+})
+$('.column_filter').each(function(i, e) {
+    $(e).keyup(function() {
+        fnFilterColumn(i);
+    });
+});
