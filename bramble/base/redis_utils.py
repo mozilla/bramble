@@ -8,6 +8,26 @@ class RedisError(Exception):
     """An error with the redis configuration or connnection."""
 
 
+def RetryForeverWrapper(fn):
+    def wrapper(*args, **kwargs):
+        try:
+            return fn(*args, **kwargs)
+        except ConnectionError:
+            how_long = 1
+            logging.warning("connection error, sleeping %s seconds", how_long)
+            sleep(how_long)
+            self.__call__(*args, **kwargs)
+    return wrapper
+
+
+class RetryForeverRedis(object):
+    def __init__(self, obj):
+        self.obj = obj
+
+    def __getattr__(self, name):
+        return RetryForeverWrapper(getattr(self.obj, name))
+
+
 def redis_client(name):
     """Get a Redis client.
 
@@ -47,4 +67,4 @@ def redis_client(name):
     except ConnectionError:
         raise RedisError(
             'Unable to connect to redis backend: {k}'.format(k=name))
-    return redis
+    return RetryForeverRedis(redis)

@@ -7,11 +7,15 @@ var fetchGlobalData = function() {
         return;
     }
 
-    $('#spinner').fadeIn();
+    $('#spinner h3').text('Loading...');
+    $('#spinner')
+        .css({'background-color': 'rgba(255,255,255,0.65)', 'color': '#000'})
+        .fadeIn();
     url = '/machines/?from=' + inputFrom.val() + '&to=' + inputTo.val();
     $.getJSON(url, populateTable).error(function() {
         $('#spinner h3').text('Error :(');
-        $('#spinner').css({'background-color': '#ff0000', 'color': '#ffffff'});
+        $('#spinner')
+            .css({'background-color': 'rgba(255,0,0,0.65)', 'color': '#ffffff'});
     });
 },
 validateInput = function() {
