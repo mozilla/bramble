@@ -1,5 +1,4 @@
 import re
-import logging
 import time
 import datetime
 import functools
@@ -9,7 +8,6 @@ from django.shortcuts import render
 from redis_utils import redis_client
 from bramble.base.machinecounts import (fetch_machine_info, format_date,
         parse_dtime)
-
 
 def json_view(f):
     @functools.wraps(f)

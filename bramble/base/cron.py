@@ -6,6 +6,7 @@ from machinecounts import parse_dtime, derive_hourly_info, get_all_slave_names
 from bramble.base.redis_utils import redis_client
 from redis import ConnectionError
 
+logger = logging.getLogger(__name__)
 
 @cronjobs.register
 def derive_machine_info(*args):
@@ -45,7 +46,7 @@ def retry_hourly_info_forever(current, redis_source, redis_store, slave_names):
     try:
         derive_hourly_info(current, redis_source, redis_store, slave_names)
     except ConnectionError:
-        logging.warning("%s occured while deriving %s, retrying...",
-                        ConnectionError, current)
+        logger.warning("%s occured while deriving %s, retrying...",
+                       ConnectionError, current)
         retry_hourly_info_forever(current, redis_source, redis_store,
                                   slave_names)

@@ -1,8 +1,12 @@
+import logging
+from time import sleep
+
 from django.conf import settings
 from django.core.cache import parse_backend_uri
 
 from redis import Redis, ConnectionError
 
+logger = logging.getLogger(__name__)
 
 class RedisError(Exception):
     """An error with the redis configuration or connnection."""
@@ -14,7 +18,7 @@ def RetryForeverWrapper(fn):
             return fn(*args, **kwargs)
         except ConnectionError:
             how_long = 1
-            logging.warning("connection error, sleeping %s seconds", how_long)
+            logger.warning("connection error, sleeping %s seconds", how_long)
             sleep(how_long)
             self.__call__(*args, **kwargs)
     return wrapper
