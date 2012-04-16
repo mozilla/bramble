@@ -2,7 +2,6 @@ import logging
 
 import anyjson as json
 
-from django.conf import settings as django_settings
 from django.http import HttpResponse, HttpResponseBadRequest
 from redis_utils import redis_client, RedisError
 

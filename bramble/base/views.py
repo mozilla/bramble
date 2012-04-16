@@ -1,13 +1,10 @@
-import re
-import time
 import datetime
 import functools
 import anyjson as json
 from django import http
 from django.shortcuts import render
 from redis_utils import redis_client
-from bramble.base.machinecounts import (fetch_machine_info, format_date,
-        parse_dtime)
+from bramble.base.machinecounts import (fetch_machine_info, parse_dtime)
 
 def json_view(f):
     @functools.wraps(f)
