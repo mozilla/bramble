@@ -8,6 +8,7 @@ from functools import partial
 from django.conf import settings
 from bramble.base.redis_utils import redis_client
 
+logger = logging.getLogger(__name__)
 
 def make_key(prefix, postfix):
     '''
@@ -71,7 +72,7 @@ def build_machine_info(dt, redis_source=None, redis_store=None,
 
     _builds_key = make_builds_key(dt)
     if not redis_source.exists(_builds_key):
-        logging.warning("No build data for %s", _builds_key)
+        logger.warning("No build data for %s", _builds_key)
 
     machine_day = make_info_pool_key(dt)
 
@@ -99,11 +100,11 @@ def build_machine_info(dt, redis_source=None, redis_store=None,
             machine_key = make_info_key(dt, slave)
 
             if not redis_store.sismember(machine_day, machine_key):
-                logging.warning("%s not in master slave list, skipping",
+                logger.warning("%s not in master slave list, skipping",
                                machine_key)
                 continue
             else:
-                logging.warning("%s is in master slave list")
+                logger.warning("%s is in master slave list")
 
             redis_source.hmset(machine_key, {
                 'scheduler': job['scheduler'],
@@ -178,9 +179,9 @@ def derive_hourly_info(date, redis_source=None, redis_store=None,
 
     _builds_key = make_builds_key(date)
     if not redis_source.exists(_builds_key):
-        logging.warning("No build data for %s", _builds_key)
+        logger.warning("No build data for %s", _builds_key)
         return
-    logging.warning("deriving data for %s", _builds_key)
+    logger.warning("deriving data for %s", _builds_key)
 
     for build in redis_source.smembers(_builds_key):
         if 'None' in build:
@@ -194,7 +195,7 @@ def derive_hourly_info(date, redis_source=None, redis_store=None,
             # create the machine key and machine value objects
             machine_key = make_info_key(date, slave)
             if not redis_store.exists(machine_key):
-                logging.warning("%s not in master slave list, skipping",
+                logger.warning("%s not in master slave list, skipping",
                                machine_key)
                 continue
 
@@ -202,7 +203,7 @@ def derive_hourly_info(date, redis_source=None, redis_store=None,
                 for key in ['scheduler', 'master', 'platform']:
                     redis_store.hmset(machine_key, {key: job[key]})
             except KeyError:
-                logging.warning("%s not found in latest job for slave %s",
+                logger.warning("%s not found in latest job for slave %s",
                               key, slave)
 
             if job['results'] is "0":

@@ -2,11 +2,10 @@ import logging
 
 import anyjson as json
 
-from django.conf import settings as django_settings
 from django.http import HttpResponse, HttpResponseBadRequest
 from redis_utils import redis_client, RedisError
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 def get_builds(request):
     '''
@@ -40,7 +39,7 @@ def get_builds(request):
         r = redis_client('briar-patch')
         hashes = r.smembers(redis_key)
     except RedisError as e:
-        log.error('redis error: %s', e)
+        logger.error('redis error: %s', e)
         hashes = set()
     result = []
     for h in hashes:
@@ -65,7 +64,7 @@ def get_build_jobs(request, uid=None):
         r = redis_client('briar-patch')
         hashes = r.smembers(redis_key)
     except RedisError as e:
-        log.error('redis error: %s', e)
+        logger.error('redis error: %s', e)
         hashes = set()
     result = []
     for build_hash in hashes:
@@ -93,7 +92,7 @@ def get_changeset_info(request, uid=None):
         r = redis_client('briar-patch')
         changeset_info = r.hgetall(redis_key)
     except RedisError as e:
-        log.error('redis error: %s', e)
+        logger.error('redis error: %s', e)
         changeset_info = {}
     return HttpResponse(json.serialize(changeset_info),
             content_type="application/json")
@@ -117,7 +116,7 @@ def get_machine_events(request, event_type=None):
         r = redis_client('brair-patch')
         events = r.hgetall(redis_key)
     except RedisError as e:
-        log.error('redis error: %s', e)
+        logger.error('redis error: %s', e)
         events = {}
     metrics = []
     for k, v in events.iteritems():
@@ -150,6 +149,6 @@ def get_job_info(request, uid=None, master=None, build_number=None):
         r = redis_client('briar-patch')
         job = r.hgetall(redis_key)
     except RedisError as e:
-        log.error('redis error: %s', e)
+        logger.error('redis error: %s', e)
         job = {}
     return HttpResponse(json.serialize(job), content_type="application/json")
