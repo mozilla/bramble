@@ -20,7 +20,7 @@ def RetryForeverWrapper(fn):
             how_long = 1
             logger.warning("connection error, sleeping %s seconds", how_long)
             sleep(how_long)
-            self.__call__(*args, **kwargs)
+            return wrapper(*args, **kwargs)
     return wrapper
 
 
