@@ -37,7 +37,7 @@ def get_builds(request):
         redis_key += date_string
 
     try:
-        r = redis_client('default')
+        r = redis_client('briar-patch')
         hashes = r.smembers(redis_key)
     except RedisError as e:
         log.error('redis error: %s', e)
@@ -62,7 +62,7 @@ def get_build_jobs(request, uid=None):
                 content_type="application/json")
     redis_key = "build:%s" % (uid)
     try:
-        r = redis_client('default')
+        r = redis_client('briar-patch')
         hashes = r.smembers(redis_key)
     except RedisError as e:
         log.error('redis error: %s', e)
@@ -90,7 +90,7 @@ def get_changeset_info(request, uid=None):
                 content_type="application/json")
     redis_key = "change:%s" % (uid)
     try:
-        r = redis_client('default')
+        r = redis_client('briar-patch')
         changeset_info = r.hgetall(redis_key)
     except RedisError as e:
         log.error('redis error: %s', e)
@@ -114,7 +114,7 @@ def get_machine_events(request, event_type=None):
                                 content_type="application/json")
     redis_key = "metrics:%s" % (event_type)
     try:
-        r = redis_client('default')
+        r = redis_client('brair-patch')
         events = r.hgetall(redis_key)
     except RedisError as e:
         log.error('redis error: %s', e)
@@ -147,7 +147,7 @@ def get_job_info(request, uid=None, master=None, build_number=None):
                                 "required")}), content_type="application/json")
     redis_key = "job:%s.%s.%s" % (uid, master, build_number)
     try:
-        r = redis_client('default')
+        r = redis_client('briar-patch')
         job = r.hgetall(redis_key)
     except RedisError as e:
         log.error('redis error: %s', e)

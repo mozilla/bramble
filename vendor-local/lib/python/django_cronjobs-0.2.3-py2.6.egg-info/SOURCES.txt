@@ -1,0 +1,13 @@
+LICENSE
+MANIFEST.in
+README.rst
+setup.cfg
+setup.py
+cronjobs/__init__.py
+cronjobs/management/__init__.py
+cronjobs/management/commands/__init__.py
+cronjobs/management/commands/cron.py
+django_cronjobs.egg-info/PKG-INFO
+django_cronjobs.egg-info/SOURCES.txt
+django_cronjobs.egg-info/dependency_links.txt
+django_cronjobs.egg-info/top_level.txt
